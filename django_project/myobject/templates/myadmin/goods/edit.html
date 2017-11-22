@@ -1,0 +1,85 @@
+{% extends "myadmin/base.html" %}
+
+{% block mainbody %}                
+    <h3>
+        商品信息管理
+    </h3>
+    <form id="edit-profile" action="{% url 'myadmin_goodsupdate' good.id %}" class="form-horizontal" method="post" enctype="multipart/form-data">
+        <input type="hidden" name='id' value="{{ good.id }}">
+        <input type="hidden" name="oldpicname" value="{{ good.picname }}">
+        {% csrf_token %}
+        <fieldset>
+            <legend>修改商品信息</legend>
+            <div class="control-group">
+                <label class="control-label" for="input01">商品类别：</label>
+                <div class="controls">
+                    <select name="typeid">
+                    {% for vo in typelist %}
+                        <option 
+                            {% if vo.pid == 0 %}
+                                disabled
+                            {% endif %}
+                            {% if vo.id == good.typeid %}
+                                selected
+                            {% endif %}
+                            value="{{ vo.id }}">{{ vo.name }}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="input01">商品名称：</label>
+                <div class="controls">
+                    <input type="text" name="goods" class="input-xlarge" id="input01" value="{{ good.goods }}" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="input01">生产厂家：</label>
+                <div class="controls">
+                    <input type="text" name="company" class="input-xlarge" id="input01" value="{{ good.company }}" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="input01">简介：</label>
+                <div class="controls">
+                    <input class="input-xlarge" rows="3" value="{{ good.descr }}" name="descr" id="input01" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="input01">单价：</label>
+                <div class="controls">
+                    <input type="text" name="price" class="input-xlarge" id="input01" value="{{ good.price }}" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="input01">图片：</label>
+                <div class="controls">
+                    <input type="file" name="mypic" class="input-xlarge" id="input01" >
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="input01">状态：</label>
+                <div class="controls">
+                    <input type="radio" name="state" class="input-xlarge" id="input01" value="1" {% if good.state == 1 %}checked{% endif %}/> 新添加
+                    <input type="radio" name="state" class="input-xlarge" id="input01" value="2" {% if good.state == 2 %}checked{% endif %}/> 在售
+                    <input type="radio" name="state" class="input-xlarge" id="input01" value="3" {% if good.state == 3 %}checked{% endif %}/> 下架
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="input01">库存量：</label>
+                <div class="controls">
+                    <input type="text" name="store" class="input-xlarge" id="input01" value="{{ good.store }}" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="input01">添加时间：</label>
+                <div class="controls">
+                    <input type="text" name="addtime" class="input-xlarge" id="input01" value="{{ good.addtime }}" />
+                </div>
+            </div>                      
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">修改</button> <button type="reset" class="btn">重置</button>
+            </div>
+        </fieldset>
+    </form>
+{% endblock %}

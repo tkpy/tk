@@ -1,0 +1,81 @@
+ {% extends "myadmin/base.html" %}
+
+{% block mainbody %}                
+    <h3>
+        商品信息管理
+    </h3>
+    <form id="edit-profile" action="{% url 'myadmin_goodsinsert' %}" class="form-horizontal" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <fieldset>
+            <legend>添加商品信息</legend>
+             <div class="control-group">
+                <label class="control-label" for="input01">商品类别：</label>
+                <div class="controls">
+                    <select name="typeid">
+                        {% for vo in typelist %}
+                            <option 
+                                {% if vo.pid == 0 %}
+                                    disabled
+                                {% endif %}
+                            value="{{ vo.id }}">{{ vo.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="input01">商品名称：</label>
+                <div class="controls">
+                    <input type="text" name="goods" class="input-xlarge" id="input01" value="" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="input01">生产厂家：</label>
+                <div class="controls">
+                    <input type="text" name="company" class="input-xlarge" id="input01"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="input01">简介：</label>
+                <div class="controls">
+                    <textarea class="input-xlarge" id="input01" rows="3" name="descr"></textarea>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="input01">单价：</label>
+                <div class="controls">
+                    <input type="text" name="price" class="input-xlarge" id="input01"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="input01">图片：</label>
+                <div class="controls">
+                    <input type="file" name="mypic" class="input-xlarge" id="input01" >
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="input01">状态：</label>
+                <div class="controls">
+                    <input type="radio" name="state" class="input-xlarge" id="input01" value="1" checked /> 新添加
+                    <input type="radio" name="state" class="input-xlarge" id="input01" value="2" /> 在售
+                    <input type="radio" name="state" class="input-xlarge" id="input01" value="3" /> 下架
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="input01">库存量：</label>
+                <div class="controls">
+                    <input type="text" name="store" class="input-xlarge" id="input01"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="input01">添加时间：</label>
+                <div class="controls">
+                    <input type="text" name="addtime" class="input-xlarge" id="input01"/>
+                </div>
+            </div>                      
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">添加</button> <button type="reset" class="btn">重置</button>
+            </div>
+            
+        </fieldset>
+    </form>
+{% endblock %}

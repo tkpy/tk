@@ -1,0 +1,53 @@
+{% extends "myadmin/base.html" %}
+
+{% block mainbody %}                
+    <h4>
+        商品分类信息管理
+    </h4>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>分类id</th>
+                <th>分类名称</th>
+                <th>父类id号</th>
+                <th>分类路径</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for vo in typelist %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ vo.pname }}|--{{ vo.name }}</td>
+                <td>{{ vo.pid }}</td>
+                <td>{{ vo.path }}</td>
+                <td>
+                    <a href="{% url 'myadmin_typeadd' vo.id %}" class="view-link">添加子类别</a>
+                    <a href="{% url 'myadmin_typedel' vo.id %}" class="view-link">删除</a>
+                    <a href="{% url 'myadmin_typeedit' vo.id %}" class="view-link">编辑</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>                
+    <div class="pagination">
+        <ul>
+            <li class="disabled">
+                <a href="#">&laquo;</a>
+            </li>
+            {% for pindex in plist %}
+                {% if pIndex == pindex %}
+                <li class="active">
+                    <a href="{{ pIndex }}">{{ pIndex }}</a>
+                </li>
+                {% else %}
+                <li>
+                    <a href="{{ pindex }}">{{ pindex }}</a>
+                </li>
+                {% endif %}
+            {% endfor %}
+            <li>
+                <a href="#">&raquo;</a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}

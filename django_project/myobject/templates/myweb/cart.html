@@ -1,0 +1,159 @@
+{% extends 'myweb/base.html' %}
+{% load static from staticfiles %}
+{% block 'title' %}
+<link rel="stylesheet" type="text/css" href="{% static 'myweb/css/cart.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'myweb/css/cart-app.css' %}">
+{% endblock %}
+
+{% block 'mainbody' %}
+    <!-- 导航 -->
+    {% if info != ''  %}
+    <script type="text/javascript">
+        var info = {{ info|safe }}
+        alert(info)
+    </script>
+    {% endif %}   
+    <div class="layout-header" id="scroll-wrap">
+		
+		<!-- 移动端结构 -->
+		<div class="scroll-view">
+			<header id="header" class="header">
+				<div class="logo">
+					<a href="./index.html">
+					  <img src="{% static 'myweb/img/app/mlogo1.jpg' %}">
+					</a>
+				</div>
+				<div class="qtool">
+					<a id="btn-search">
+					  <i class="glyphicon  glyphicon-search"></i>
+					</a>
+					<a href="#">
+					  <i class="glyphicon  glyphicon-shopping-cart"></i>
+					</a>
+					<a id="user-name" href="#">
+					  <i class="glyphicon glyphicon-user"></i>
+					</a>
+				</div>
+			</header>
+		</div>
+    </div>
+    <!-- 导航 E-->
+    <!-- 主内容区域 -->
+    <div class="mainbody cart " style="margin-top: 75px;">
+		<div class="container">
+			<!-- 购物车详情头 -->
+			<table class="cart-header">
+				<tbody>
+					<tr>
+						<td class="cart-col-name col-md-3 hidden-xs hidden-sm">我的购物车</td>
+						<td class="cart-col-name col-md-3 hidden-xs hidden-sm">商品</td>
+						<td class="cart-col-price col-md-2 hidden-xs hidden-sm">单价(元)</td>
+						<td class="cart-col-number col-md-2 hidden-xs hidden-sm">数量</td>
+						<td class="cart-col-total col-md-1 hidden-xs hidden-sm">小计(元)</td>
+						<td class="cart-col-ctrl col-md-1 hidden-xs hidden-sm">操作</td>
+					</tr>
+				</tbody>
+			</table><!-- 购物车详情头 E-->
+			
+			<!-- 购物清单信息列表 -->
+			<div class="cart-merchant-list">
+				<div class="cart-merchant">
+					<table class="cart-merchant-body">
+						<tbody>
+							{% for shop in request.session.shoplist.values %}
+							<tr class="cart-product" id="pro5">
+								<td class="cart-col-select col-md-3 col-xs-4 col-sm-4">  
+									<div class="mz-checkbox checked " gid="{{ shop.id }}" price="{% widthratio shop.price 1 shop.num %}"></div> 
+									<a href="{% url 'detail' shop.id %}" class="cart-product-link" target="_blank">
+										<img src="/static/myadmin/img/upload/s_{{ shop.picname }}" class="cart-product-img" alt="魅蓝 X">
+									</a>
+								</td>
+								<td class="cart-col-name col-md-3 col-xs-8 col-sm-8">
+									<a href="meilanx.html" class="cart-product-link" target="_blank">
+									  <p>{{ shop.goods }}</p>
+									  <span class="cart-product-desc">全网通公开版 流光金 32GB</span>
+									</a>
+									<p class="">
+										<span class="cart-product-price"></span>
+									</p>
+									<div class="cart-col-number">
+										<div class="cart-product-number-adder">
+											<p class="cart-product-number-max show"></p>
+											<div class="mz-adder">
+												<button class="mz-adder-subtract disabled"></button>
+												<div class="mz-adder-num"><input class="mz-adder-input" value="{{ shop.num }}" type="text"></div>
+												<button class="mz-adder-add"></button>
+											</div>
+										</div>
+									</div>
+								</td>
+								<td class="cart-col-price col-md-2 hidden-xs hidden-sm">
+									<p>
+										<span class="cart-product-price">{{ shop.price }}</span>
+									</p>
+								</td>
+								<td class="cart-col-number col-md-2 hidden-xs hidden-sm">
+									<div class="cart-product-number-adder">
+										<p class="cart-product-number-max show"></p>
+										<div class="mz-adder">
+											<!-- 商品的加减 -->
+											<button class="mz-adder-subtract disabled" onclick="window.location='{% url 'cartchange' %}?sid={{ shop.id }}&num={{ shop.num|add:-1 }}'"></button>
+											<div class="mz-adder-num"><input class="mz-adder-input" value="{{ shop.num }}" type="text"></div>
+											<button class="mz-adder-add" onclick="window.location='{% url 'cartchange' %}?sid={{ shop.id }}&num={{ shop.num|add:1 }}'"></button>
+										</div>
+									</div>
+								</td>
+								<td class="cart-col-total col-md-1 hidden-xs hidden-sm">
+									<span class="cart-product-price total">{% widthratio shop.price 1 shop.num %}.00</span>
+								</td>
+								<td class="cart-col-ctrl col-md-1 hidden-xs hidden-sm">
+									<a href="{% url 'myweb_cartdel' shop.id %}">
+									<div class="cart-product-remove" title="删除">
+										<span class="glyphicon glyphicon-remove"></span>
+									</div>
+									</a>
+								</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div><!-- 购物清单信息列表 E-->
+		</div>
+		<!-- 结算详情 -->
+		<div class="cart-footer" id="cartFooter">
+			<div class="container">
+			   <div class="cart-footer-left col-md-6 col-xs-4 col-sm-4">
+				   <div class="cart-select-all JSelectAll" data-mdesc="全选按钮" data-mtype="store_cart_all">
+						<div class="mz-checkbox"></div>
+						<span class="cart-select-title">全选</span>
+				   </div>
+				   <!-- <span class="cart-remove-selected" id="removeSelected">删除选中的商品</span> -->
+				   <span class="cart-footer-count">
+						共
+						<span class="cart-footer-num" id="totalCount"></span>
+						件商品
+				   </span>
+				   <a href="{% url 'myweb_cartclear' %}"><div class="mz-btn btn-danger" id="cartSubmit">清空购物车</div></a>
+				</div>
+				<div class="cart-footer-right col-md-5 col-md-offset-1 col-sm-offset-2 col-xs-8 col-sm-6">
+					<span class="cart-footer-sum">
+						<span class="cart-footer-text">已优惠</span>
+						<span class="cart-footer-num red" id="totalDiscount">0.00</span>
+						<span class="cart-footer-text">元， 合计(不含运费)：</span>
+						<span class="cart-footer-total" id="totalPrice">0.00</span>
+					</span>
+					
+					<div class="mz-btn success" id="cartSubmit" onclick="window.location='{% url 'order' %}?gids='+loadTotal().join(',')">去结算</div>
+					
+				</div>
+			</div>
+		</div><!-- 结算详情 E-->
+	</div>
+    <!-- 主内容区域 E-->
+    <script type="text/javascript">
+    	cartAddMin()
+    	allSelect()
+    	loadTotal()
+    </script>
+{% endblock %}

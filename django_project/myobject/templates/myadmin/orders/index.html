@@ -1,0 +1,83 @@
+{% extends "myadmin/base.html" %}
+
+{% block mainbody %}
+	{% comment %}
+	{% if info != ''  %}
+	<script type="text/javascript">
+		var info = {{ info|safe }}
+		alert(info)
+	</script>
+	{% endif %} 
+	{% endcomment %}   
+	<h4>
+		订单信息管理
+	</h4>
+	<form action="{% url 'myadmin_orders' pIndex %}" method="get">
+	联系人: <input type="text" size="6" name="name" value="{{ request.GET.name }}"> 
+	<input type="submit" value="搜索" style="margin-top: -10px;">
+	</form>
+	<table class="table table-bordered table-striped">
+		<thead>
+			<tr>
+				<th>id</th>
+				<th>会员id号</th>
+				<th>联系人</th>
+				<th>地址</th>
+				<th>邮编</th>
+				<th>电话</th>
+				<th>订单号</th>
+				<th>总金额</th>
+				<th>状态</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for vo in orderlist %}
+			<tr>
+				<td>{{ forloop.counter }}</td>
+				<td>{{ vo.uid }}</td>
+				<td>{{ vo.linkman }}</td>
+				<td>{{ vo.address }}</td>
+				<td>{{ vo.code }}</td>
+				<td>{{ vo.phone }}</td>
+				<td>{{ vo.addtime }}</td>
+				<td>{{ vo.total }}</td>
+				{% if vo.status == 0 %}
+				<td>待发货</td>
+				{% elif vo.status == 1 %}
+				<td>已发货</td>
+				{% elif vo.status == 2 %}
+				<td>已收货</td>
+				{% elif vo.status == 3 %}
+				<td>无效订单</td>
+				{% endif %}
+				<td>
+					<a href="{% url 'myadmin_detail' vo.id %}" class="view-link">查看详情</a>
+					<a href="{% url 'myadmin_editorder' vo.id %}" class="view-link">编辑</a>
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>                
+	<div class="pagination">
+		<ul>
+			<li class="disabled">
+				<a href="#">&laquo;</a>
+			</li>
+			{% for pindex in plist %}
+				{% if pIndex == pindex %}
+				<li class="active">
+					<a href="{{ pIndex }}">{{ pIndex }}</a>
+				</li>
+				{% else %}
+				<li>
+					<a href="{{ pindex }}">{{ pindex }}</a>
+				</li>
+				{% endif %}
+			{% endfor %}
+			<li>
+				<a href="#">&raquo;</a>
+			</li>
+		</ul>
+	</div>
+{% endblock %}
