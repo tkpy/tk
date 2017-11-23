@@ -133,7 +133,7 @@ ITEM_PIPELINES = {
 DOWNLOAD_TIMEOUT = 3
 
 #记录所有重复请求
-DUPEFILTER_DEBUG = True
+# DUPEFILTER_DEBUG = True
 
 #url 指纹过滤器
 DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
