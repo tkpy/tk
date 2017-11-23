@@ -16,15 +16,15 @@ class ChinahrSpider(RedisCrawlSpider):
     redis_key = 'chinahrspider:start_urls'
     #匹配路径
     rules = (
-
-        Rule(LinkExtractor(allow=r'.chinahr.com/job/\d+.html'), callback='parse_item', follow=False),
-        Rule(LinkExtractor(allow=r'.chinahr.com/.*/jobs/\d+/$'), follow=True),
-        Rule(LinkExtractor(allow=r'.chinahr.com/.*/jobs/\d+/\d+/$'), follow=True),
-
+        Rule(LinkExtractor(allow=r'/beijing/s/'), callback='parse_item', follow=True),
+        Rule(LinkExtractor(allow=r'www.chinahr.com/job/[1-9a-z]+.html'), callback='parse_item', follow=True),
+        # Rule(LinkExtractor(allow=r'.chinahr.com/.*/jobs/\d+/$'), follow=True),
+        # Rule(LinkExtractor(allow=r'.chinahr.com/.*/jobs/\d+/\d+/$'), follow=True),
     )
     num_pattern = re.compile(r'\d+')
     #页面解析函数
     def parse_item(self, response):
+        # print(response.url)
         # item = DhinahrItem()
         item = {}
         #链接
@@ -121,8 +121,8 @@ class ChinahrSpider(RedisCrawlSpider):
         item["jobaddr"] = jobaddr
         item["company"] = company
         item["crawl_time"] = crawl_time
-        # if item['pname'] != None:
-        yield item
+        if item['pname']:
+            yield item
 
     #发布时间处理
     def process_date(self,value):

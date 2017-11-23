@@ -130,7 +130,7 @@ ITEM_PIPELINES = {
 
 #分布式爬取
 #下载超时 , 用于检测过滤重复请求的类
-DOWNLOAD_TIMEOUT = 3
+DOWNLOAD_TIMEOUT = 15
 
 #记录所有重复请求
 # DUPEFILTER_DEBUG = True
@@ -149,8 +149,8 @@ SCHEDULER_QUEUE_CLASS = "scrapy_redis.queue.SpiderPriorityQueue" # 按优先级�
 # SCHEDULER_QUEUE_CLASS = "scrapy_redis.queue.SpiderStack" # 按照栈进行请求的调度
 
 # redis 连接配置
-REDIS_HOST = '101.132.108.7'
-REDIS_PORT = 4415
+REDIS_HOST = '106.14.159.206'
+REDIS_PORT = 6000
 
 
 
