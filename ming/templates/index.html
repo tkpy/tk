@@ -1,0 +1,157 @@
+{% load static from staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>随机点名</title>
+    <script type="text/javascript" src="{% static  'js/jquery-1.8.3.min.js' %}"></script>
+	<style type="text/css">
+		#add{
+			width: 100px;height: 100px;
+			border: 1px solid pink;
+			font-size:15px;
+			text-align: center;
+			line-height: 100px;
+			margin: 150px auto;
+		}
+
+		button{
+			display: block;
+			margin: -120px auto;
+		}
+        #qing{
+
+            margin-top: 96px;
+            margin-left: 620px;
+
+        }
+	</style>
+</head>
+<body>
+	<div id="add">
+		白立鹏
+	</div>
+    <button>开始</button> <button id="qing">请假</button>
+    <a href="{% url 'show' %}">请假学生名单</a>
+    <br>
+    总人数:<p class="tatil"></p>
+{#    点过的人员名单: <p class="without">0</p>#}
+    没点过人数: <p class="remain"></p>
+	<script type="text/javascript">
+            // 进行ajax请求
+            // 申请一个空数组存放人名
+            var arr = []
+            // 申请一个存放ajax请求过来的数据
+            var lists = []
+            // 统计请假按钮单击的次数
+            var clicknum = 0
+            $.ajax({
+                url:"{% url 'doajax' %}",
+                type:'get',
+                dataType:'json',
+                async:true,
+                success:function(re){
+                    // 存放申请过来的数据
+                    lists = re.data
+                    for(var i=0;i<lists.length;i++){
+                        arr.push(lists[i].name)
+                    }
+                },
+                error:function(){
+                    alert('请求失败!')
+                }
+            })
+
+		//var arr=['白立鹏','滕坤','蒋志学','高坡','徐霞客']
+
+		var add =document.getElementById('add');
+		var btn =document.getElementsByTagName('button')[0];
+		var isOk=false;
+		var init=null;
+
+		// 给请假按钮绑定单击事件
+		$('#qing').click(function(){
+		    clicknum += 1
+		    // 获取当前标签的值
+            textval = add.innerText;
+            // 从存放人名的数组中删除当前标签的值
+            removeByValue(arr,textval);
+            if(clicknum==1){
+                console.log(textval)
+            for(var j=0;j<lists.length;j++){
+                // 如果当前标签的值等于循环的值获取说明请假,获取id再次发送ajax请求
+                if(lists[j].name==textval){
+                    nid = lists[j].id
+                    $.ajax({
+                        url:"{% url 'vacate' %}",
+                        type:'get',
+                        dataType:'json',
+                        async:true,
+                        data:{'nid':nid},
+                        success:function(re){
+                            console.log(re.data)
+                        },
+                        error:function(){
+                            console.log('请求失败')
+                        }
+                    })
+                }
+            }
+            }
+        })
+
+		//绑定单机事件
+		btn.onclick = function(){
+		    // 总人数
+            var tatil = lists.length
+            $('.tatil').html(tatil)
+            // 没点过人员数量
+            var remain = arr.length
+            $('.remain').html(remain)
+
+		    // 将请假按钮的单击次数重新归为0
+            clicknum = 0;
+
+			if(isOk){
+				//修改全局变量
+				isOk = false;
+				btn.innerHTML = '开始';
+				//清除定时器
+				clearInterval(init);
+				
+				// 获取当前标签的值
+				textval = add.innerText;
+				// 删除当前标签中的值
+				removeByValue(arr,textval);
+				
+			}else{
+				//修改全局变量
+				isOk = true;
+				btn.innerHTML = '停止';
+				//最大下标
+				var len = arr.length-1;
+				//启动定时器
+				init = setInterval(function(){
+					//随机下标
+					var num = rand(0,len);
+					//设置文本
+					add.innerHTML = arr[num];
+				},100)
+			}
+		}
+		// 定义删除函数
+		function removeByValue(arr, val) {
+		for(var i=0; i<arr.length; i++) {
+			if(arr[i] == val) {
+				arr.splice(i, 1);
+				break;
+				}
+			}
+		}
+		//随机函数
+		function rand(m,n){
+			return Math.floor(Math.random()*(n-m+1))+m;
+		}
+	</script>
+</body>
+</html>
